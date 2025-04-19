@@ -1,7 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser'; 
 import mongoose from 'mongoose';   //for the database
-import Student from './models/student.js';  //importing the model
+import studentRouter from './routes/studentRouter.js';
+import productRouter from './routes/productRoute.js';
+import userRouter from './routes/userRoute.js';
 
 const app = express();  // const used so that this variable cannot be changed again
 
@@ -14,64 +16,9 @@ mongoose.connect("mongodb+srv://admin:diara123@cluster0.gmahg.mongodb.net/?retry
 })
 
 
-
-app.get("/", 
-    (req,res)=> {    
-            Student.find().then(
-                (data)=>{
-                    res.json(data)  //data to to be found in the database
-                }
-            )
-    }
-)
-
-app.delete("/", 
-    (req,res)=> {    //this is put since this function from express framework
-        res.json(
-            {
-                message: 'this is a delete request'
-            }
-        )   //response is sent
-        }
-)
-
-
-app.post("/", 
-    (req,res)=> {    //this is put since this function from express framework
-        console.log(req.body)
-
-
-        const student = new Student(    //student--> is the database name which is been saved
-            {
-                name: req.body.name,
-                age: req.body.age,
-                stream: req.body.stream,
-                email: req.body.email
-            }
-        )
-
-        student.save().then(()=> {
-            res.json({
-                message: 'Student saved successfully'
-            })
-        }).catch(()=> {
-            res.json({
-                message: 'Failed to add student'
-            })
-        })
-    }
-             
-)
-
-app.put("/",
-    (req,res)=> {    //this is put since this function from express framework
-        res.json(
-            {
-                message: 'this is a put request'
-            }
-        )   //response is sent
-        } 
-)
+app.use("/students", studentRouter)
+app.use("/products", productRouter)
+app.use("/users", userRouter)
 
 app.listen( 3000, 
     ()=>{
