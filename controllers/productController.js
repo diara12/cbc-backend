@@ -1,7 +1,7 @@
-import Prodcut from "../models/product.js";
+import Product from "../models/product.js";
 
 export function getProducts(req,res){
-    Prodcut.find().then(
+    Product.find().then(
         (data)=>{
             res.json(data)
         }
@@ -9,7 +9,19 @@ export function getProducts(req,res){
 }
 
 export function saveProduct(req,res){
-    console.log(req.body);
+    if(req.user == null){
+        res.status(403).json({
+            message: "Unauthorized"
+        })
+        return  //product not saved
+    }
+
+    if(req.user.role != "admin"){
+        res.status(403).json({
+            message: "Unauthorized. You need to be an admin."
+        })
+        return
+    }
 
     const product = new Product({
         name: req.body.name,
