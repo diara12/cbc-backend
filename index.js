@@ -5,6 +5,7 @@ import studentRouter from './routes/studentRouter.js';
 import productRouter from './routes/productRoute.js';
 import userRouter from './routes/userRoute.js';
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv'; //for the environment variables
 
 const app = express();  // const used so that this variable cannot be changed again
 
@@ -37,7 +38,7 @@ app.use(
     }
 ) //middleware
 
-mongoose.connect("mongodb+srv://admin:diara123@cluster0.gmahg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect(process.env.MONDODB_URL)
 .then( ()=> {
     console.log('Connected to database')
 }).catch(()=> {
