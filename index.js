@@ -5,11 +5,15 @@ import studentRouter from './routes/studentRouter.js';
 import productRouter from './routes/productRoute.js';
 import userRouter from './routes/userRoute.js';
 import jwt from "jsonwebtoken";
+import cors from 'cors';
 import dotenv from 'dotenv'; //for the environment variables
+dotenv.config();
 
 const app = express();  // const used so that this variable cannot be changed again
 
+app.use(cors())
 app.use(bodyParser.json())
+
 
 app.use(
     (req,res,next)=>{
@@ -18,7 +22,7 @@ app.use(
             const token = tokenString.replace("Bearer ", "")
             
 
-            jwt.verify(token, "cbc-batch-five#@2025", 
+            jwt.verify(token, process.env.JWT_KEY, 
                 (err,decoded)=>{
                     if(decoded != null){
                         console.log(decoded)
@@ -38,7 +42,7 @@ app.use(
     }
 ) //middleware
 
-mongoose.connect(process.env.MONDODB_URL)
+mongoose.connect(process.env.MONGODB_URL)
 .then( ()=> {
     console.log('Connected to database')
 }).catch(()=> {
