@@ -79,3 +79,38 @@ export async function createOrder(req,res){
     }
 
 }
+
+export async function updatedOrderStatus(req,res){
+    if(!isAdmin(req)) {
+        res.status(403).json({
+            message: "You are not authorized to update order status"
+        })
+        return;
+    }
+
+    try{
+        const orderId = req.params.orderId;
+        const status = req.params.status;
+
+        await Order.updateOne(
+            {
+                orderId: orderId
+            },
+            {
+                status: status
+            }
+        )
+
+        res.json({
+            message: "Order status updated successfully",
+        })
+        
+    }catch(e){
+        console.log(e);
+        res.status(500).json({
+            message: "Failed to update order status",
+            error: e,
+        });
+        return;
+    }
+}

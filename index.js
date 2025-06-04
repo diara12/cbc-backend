@@ -50,9 +50,9 @@ mongoose.connect(process.env.MONGODB_URL)
 })
 
 
-app.use("/students", studentRouter)
-app.use("/products", productRouter)
-app.use("/users", userRouter)
+app.use("/api/students", studentRouter)
+app.use("/api/products", productRouter)
+app.use("/api/users", userRouter)
 
 app.listen( 3000, 
     ()=>{
