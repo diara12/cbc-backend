@@ -1,61 +1,61 @@
 import express from 'express';
-import bodyParser from 'body-parser'; 
-import mongoose from 'mongoose';   //for the database
-import studentRouter from './routes/studentRouter.js';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
 import productRouter from './routes/productRoute.js';
 import userRouter from './routes/userRoute.js';
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+import orderRouter from './routes/orderRoute.js';
 import cors from 'cors';
-import dotenv from 'dotenv'; //for the environment variables
+import dotenv from 'dotenv';
 dotenv.config();
-
-const app = express();  // const used so that this variable cannot be changed again
-
+const app = express();
 app.use(cors())
 app.use(bodyParser.json())
 
-
 app.use(
     (req,res,next)=>{
-        const tokenString = req.header("Authorization") //to get the token from the header
-        if (tokenString != null){
+        const tokenString = req.header("Authorization")
+        if(tokenString != null){
             const token = tokenString.replace("Bearer ", "")
-            
 
-            jwt.verify(token, process.env.JWT_KEY, 
+            jwt.verify(token, process.env.JWT_KEY , 
                 (err,decoded)=>{
                     if(decoded != null){
-                        console.log(decoded)
                         req.user = decoded
-                        next()     //to send for the req to the required.
+                        next()
                     }else{
-                        console.log("Invalid Token")
+                        console.log("invalid token")
                         res.status(403).json({
-                            message: "Invalid Token"
+                            message : "Invalid token"
                         })
                     }
                 }
             )
+
         }else{
-            next() //this is for if token not provided (product added without token)
-        }  
+            next()
+        }
     }
-) //middleware
+)
 
 mongoose.connect(process.env.MONGODB_URL)
-.then( ()=> {
-    console.log('Connected to database')
-}).catch(()=> {
-    console.log('Database connection failed')
+.then(()=>{
+    console.log("Connected to the database")
+}).catch((err)=>{
+    console.log("Database connection failed")
+    console.log(err)
 })
 
 
-app.use("/api/students", studentRouter)
-app.use("/api/products", productRouter)
-app.use("/api/users", userRouter)
 
-app.listen( 3000, 
+
+app.use("/api/products", productRouter)
+app.use("/api/users",userRouter)
+app.use("/api/orders",orderRouter)
+
+
+app.listen( 5000, 
     ()=>{
-        console.log('Server is running port 3000');
-    }   //arrow function
+        console.log('Server is running on port 5000');
+    }
 )
