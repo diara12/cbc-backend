@@ -138,23 +138,21 @@ export async function getProductById(req,res){
 
 
 }
-
 export async function searchProducts(req,res){
-    const searchQuery = req.params.searchQuery;
+    const searchQuery = req.params.query
     try{
         const products = await Product.find({
-            $or: [ 
-                { name: { $regex: searchQuery, $options: 'i' } },
-                { altNames: { $regex: searchQuery, $options: 'i' } },
-                { description: { $regex: searchQuery, $options: 'i' } }
-            ]
-        });
-
-        res.json(products);
+            $or:[
+                {name :  {$regex : searchQuery, $options : "i"}},
+                {altNames : {$elemMatch : {$regex : searchQuery, $options : "i"}}}
+            ],
+            isAvailable : true
+        })
+        res.json(products)
     }catch(err){
-        console.log(err);
         res.status(500).json({
-            message: "Error searching products"
+            message : "Internal server error",
+            error : err
         })
     }
 }

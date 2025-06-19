@@ -154,10 +154,5 @@ export async function updateOrderStatus(req,res){
 			error: e,
 		});
 		return;
-	}
-
-	
-
-	
-	
+	}	
 }
