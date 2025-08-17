@@ -66,6 +66,7 @@ export async function createOrder(req, res) {
 					images: item.images,
 					labelledPrice: item.labelledPrice,
 					price: item.price,
+					category: item.category,
 				},
 				quantity: orderInfo.products[i].qty,
 			};
@@ -154,5 +155,10 @@ export async function updateOrderStatus(req,res){
 			error: e,
 		});
 		return;
-	}	
+	}
+
+	
+
+	
+	
 }

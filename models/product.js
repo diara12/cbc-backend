@@ -37,6 +37,11 @@ const productSchema = mongoose.Schema({
 		required : true,
 		default : true
 	},
+	category: {
+		type: String,
+		required: true,
+		enum: ["Lip Care", "Eye Makeup", "Face makeup", "Skin Care"]
+	}
 });
 
 const Product = mongoose.model("products", productSchema);

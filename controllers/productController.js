@@ -1,24 +1,29 @@
 import Product from "../models/product.js";
 import { isAdmin } from "./userController.js";
 
-export async function getProducts(req,res){
+export async function getProducts(req, res) {
+    try {
+        const category = req.query.category; // to check if category filter is provided
+        let filter = {};
 
-    try{
-        if(isAdmin(req)){
-            const products = await Product.find()
-            res.json(products)
-        }else{
-            const products = await Product.find({isAvailable : true})
-            res.json(products)
+        if (!isAdmin(req)) {
+            filter.isAvailable = true; // only available products for normal users
         }
-        
-    }catch(err){
-        res.json({
+
+        if (category) {
+            filter.category = category; // apply category filter
+        }
+
+        const products = await Product.find(filter);
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({
             message: "Failed to get products",
             error: err
-        })
+        });
     }
 }
+
 
 export function saveProduct(req, res){
 
